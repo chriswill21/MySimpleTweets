@@ -37,10 +37,10 @@
         <activity
             android:name=".ComposeActivity"
             android:parentActivityName=".TimelineActivity" />
-
         <activity
             android:name=".TweetDetailsActivity"
             android:parentActivityName=".TimelineActivity" />
+        <activity android:name=".ReplyActivity"></activity>
     </application>
 
 </manifest>

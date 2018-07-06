@@ -47,7 +47,7 @@ public class TimelineActivity extends AppCompatActivity {
         // init the arraylist (data source)
         tweets = new ArrayList<>();
         // construct the adapter from this datasource
-        tweetAdapter = new TweetAdapter(tweets);
+        tweetAdapter = new TweetAdapter(this, tweets);
         // recyclerview setup (layout manager, use adapter)
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         // set the adapter
@@ -174,6 +174,7 @@ public class TimelineActivity extends AppCompatActivity {
         startActivityForResult(i, REQUEST_CODE);
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // REQUEST_CODE is defined above
@@ -185,7 +186,6 @@ public class TimelineActivity extends AppCompatActivity {
 
         }
     }
-
 
 
 }

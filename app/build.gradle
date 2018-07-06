@@ -52,4 +52,6 @@ dependencies {
     implementation 'org.parceler:parceler-api:1.1.6'
     annotationProcessor 'org.parceler:parceler:1.1.6'
     implementation 'com.github.broakenmedia:CharCountTextView:v1.0'
+    implementation "android.arch.paging:runtime:1.0.0"
+
 }

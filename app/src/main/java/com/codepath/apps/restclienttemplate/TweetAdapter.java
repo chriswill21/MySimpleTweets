@@ -1,5 +1,6 @@
 package com.codepath.apps.restclienttemplate;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -25,10 +26,14 @@ import java.util.Locale;
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
+//public class TweetAdapter extends ListAdapter<Tweet, TweetAdapter.ViewHolder> {
 
+    private final Activity activity;
     private List<Tweet> mTweets;
+
     // pass in the Tweets array into the constructor
-    public TweetAdapter(List<Tweet> tweets) {
+    public TweetAdapter(Activity activity, List<Tweet> tweets) {
+        this.activity = activity;
         mTweets = tweets;
     }
     Context context;
@@ -39,7 +44,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View tweetView = inflater.inflate(R.layout.item_tweet, parent, false);
-        ViewHolder viewHolder = new ViewHolder(tweetView);
+        ViewHolder viewHolder = new ViewHolder(activity, tweetView);
         return viewHolder;
 
     }
@@ -86,15 +91,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
     // create ViewHolder class
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class ViewHolder extends RecyclerView.ViewHolder
+            implements View.OnClickListener, View.OnLongClickListener{
+        public final Activity activity;
         public ImageView ivProfileImage;
         public TextView tvUsername;
         public TextView tvBody;
         public TextView tvDate;
         public Tweet tweet;
+        private final int REQUEST_CODE = 21;
 
-        public ViewHolder (View itemView) {
+
+        public ViewHolder (Activity activity, View itemView) {
             super(itemView);
+            this.activity = activity;
 
             // perform findViewById lookups
 
@@ -103,6 +113,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvDate = (TextView) itemView.findViewById(R.id.tvDate);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         @Override
@@ -114,7 +125,20 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             i.putExtra("Tweet", Parcels.wrap(tweet));
             itemView.getContext().startActivity(i);
         }
+
+        @Override
+        public boolean onLongClick(View v) {
+            // handle click here
+            Intent i = new Intent(itemView.getContext(), ReplyActivity.class);
+            i.putExtra("UserName", tvUsername.getText().toString());
+            i.putExtra("Tweet", Parcels.wrap(tweet));
+            activity.startActivityForResult(i, REQUEST_CODE);
+            return true;
+        }
+
+
     }
+
 
     // getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
     public String getRelativeTimeAgo(String rawJsonDate) {
@@ -145,5 +169,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         mTweets.addAll(list);
         notifyDataSetChanged();
     }
+
 
 }
